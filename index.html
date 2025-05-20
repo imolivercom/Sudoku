@@ -13,55 +13,52 @@ const appId  = "app_5a4afe0b95b879ffd73aa5cb853bef25";
 const action = "sudoku_login";
 let jwt      = localStorage.getItem("jwt") || null;
 
-async function login() {
+async function doLogin() {
   try {
     const { proof, nullifier_hash } = await verify({ app_id: appId, action });
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    const r = await fetch("/api/login", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({ proof, nullifier_hash })
     });
-    const { token, username } = await res.json();
+    const { token, username } = await r.json();
     jwt = token;
     localStorage.setItem("jwt", jwt);
-    document.getElementById("greet").textContent = "Hello, " + username;
-    document.getElementById("startScreen").style.display="none";
-    document.getElementById("appContent").style.display="flex";
-    window.initGame(); // call build once JS loaded
-  } catch (err) {
-    alert("Sign‑in cancelled, cannot play.");
-    console.error(err);
+    document.getElementById("greet").textContent = username;
+    document.getElementById("overlay").style.display="none";
+    window.initSudoku();
+  } catch (e) {
+    console.error(e);
+    alert("World ID verification cancelled.");
   }
 }
 
-window.addEventListener("DOMContentLoaded", ()=>{
-  document.getElementById("startBtn").onclick = login;
+window.addEventListener("DOMContentLoaded",()=>{
+  const btn=document.getElementById("loginBtn");
+  btn.onclick=doLogin;
   if(jwt){
-    // already signed in previously
-    document.getElementById("startScreen").style.display="none";
-    document.getElementById("appContent").style.display="flex";
+    // already verified previously
+    document.getElementById("overlay").style.display="none";
+    window.initSudoku();
   }
 });
 </script>
 </head>
 <body>
-<!-- overlay -->
-<div id="startScreen" class="start-overlay">
+<!-- Overlay -->
+<div id="overlay" class="overlay">
   <h1>Sudoku Mini</h1>
-  <button id="startBtn">Sign in with World ID&nbsp;➔</button>
+  <button id="loginBtn">Sign in with World ID ➔</button>
 </div>
 
-<!-- hidden until login -->
-<div id="appContent" style="display:none;">
+<div id="game">
   <header class="sudoku-header">
-    <span id="greet"></span>
+    <span>👤 <strong id="greet"></strong></span>
     <button id="newGame" class="icon-btn" aria-label="new game">⟳</button>
   </header>
-
   <div class="board-wrapper"><div class="grid" id="grid"></div></div>
   <div id="win">🎉 You win!</div>
-
-  <a href="leaderboard.html" class="leaderboard-link">🏆 View Leaderboard</a>
+  <a href="leaderboard.html" class="leaderboard-link">🏆 Leaderboard</a>
 </div>
 
 <script type="module" src="sudoku.js"></script>
