@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="world-mini-app" content="v1">
+<title>Sudoku Mini</title>
+<link rel="stylesheet" href="styles.css">
+<script type="module">
+import { verify } from "https://cdn.jsdelivr.net/npm/@worldcoin/minikit-js@1/+esm";
+const appId = "app_5a4afe0b95b879ffd73aa5cb853bef25";
+const action = "sudoku_login";
+let jwt = localStorage.getItem("jwt") || null;
+
+async function login(){
+  try{
+    const { proof, nullifier_hash } = await verify({ app_id: appId, action });
+    const r = await fetch("/api/login", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ proof, nullifier_hash })
+    });
+    const { token, username } = await r.json();
+    jwt = token;
+    localStorage.setItem("jwt", jwt);
+    document.getElementById("greet").textContent = "Hello, " + username;
+  }catch(e){
+    console.error(e);
+  }
+}
+
+window.addEventListener("DOMContentLoaded", ()=>{
+  if(!jwt){ login(); }          // prompt immediately
+});
+</script>
+</head>
+
+<body>
+<div id="app">
+  <header class="sudoku-header">
+    <span id="greet"></span>
+    <button id="newGame" class="icon-btn" aria-label="new game">⟳</button>
+  </header>
+
+  <div class="board-wrapper"><div class="grid" id="grid"></div></div>
+  <div id="win">🎉 You win!</div>
+
+  <a href="leaderboard.html" class="leaderboard-link">🏆 View Leaderboard</a>
+</div>
+
+<script type="module" src="sudoku.js"></script>
+</body>
+</html>
