@@ -8,29 +8,32 @@
 <link rel="stylesheet" href="styles.css">
 <script type="module">
 import { verify } from "https://cdn.jsdelivr.net/npm/@worldcoin/minikit-js@1/+esm";
-const appId = "app_5a4afe0b95b879ffd73aa5cb853bef25";
-const action = "sudoku_login";
-let jwt = localStorage.getItem("jwt") || null;
 
-async function login(){
-  try{
+const appId  = "app_5a4afe0b95b879ffd73aa5cb853bef25";
+const action = "sudoku_login";
+let jwt      = localStorage.getItem("jwt") || null;
+
+async function login() {
+  try {
     const { proof, nullifier_hash } = await verify({ app_id: appId, action });
-    const r = await fetch("/api/login", {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ proof, nullifier_hash })
     });
-    const { token, username } = await r.json();
+    const { token, username } = await res.json();
     jwt = token;
     localStorage.setItem("jwt", jwt);
     document.getElementById("greet").textContent = "Hello, " + username;
-  }catch(e){
-    console.error(e);
+  } catch (err) {
+    console.error("World ID login failed:", err);
   }
 }
 
-window.addEventListener("DOMContentLoaded", ()=>{
-  if(!jwt){ login(); }          // prompt immediately
+window.addEventListener("DOMContentLoaded", () => {
+  if (!jwt) {
+    login();             // auto‑prompt on first load
+  }
 });
 </script>
 </head>
