@@ -25,21 +25,34 @@ async function login() {
     jwt = token;
     localStorage.setItem("jwt", jwt);
     document.getElementById("greet").textContent = "Hello, " + username;
+    document.getElementById("startScreen").style.display="none";
+    document.getElementById("appContent").style.display="flex";
+    window.initGame(); // call build once JS loaded
   } catch (err) {
-    console.error("World ID login failed:", err);
+    alert("Sign‑in cancelled, cannot play.");
+    console.error(err);
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  if (!jwt) {
-    login();             // auto‑prompt on first load
+window.addEventListener("DOMContentLoaded", ()=>{
+  document.getElementById("startBtn").onclick = login;
+  if(jwt){
+    // already signed in previously
+    document.getElementById("startScreen").style.display="none";
+    document.getElementById("appContent").style.display="flex";
   }
 });
 </script>
 </head>
-
 <body>
-<div id="app">
+<!-- overlay -->
+<div id="startScreen" class="start-overlay">
+  <h1>Sudoku Mini</h1>
+  <button id="startBtn">Sign in with World ID&nbsp;➔</button>
+</div>
+
+<!-- hidden until login -->
+<div id="appContent" style="display:none;">
   <header class="sudoku-header">
     <span id="greet"></span>
     <button id="newGame" class="icon-btn" aria-label="new game">⟳</button>
