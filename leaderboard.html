@@ -1,28 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="world-mini-app" content="v1">
-<title>Leaderboard</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="world-mini-app" content="v1"><title>Leaderboard</title>
 <link rel="stylesheet" href="styles.css">
-<style>
-body{background:#f2f2f2;color:#000}
-h1{text-align:center;margin:1rem 0;}
-#list{max-width:400px;margin:0 auto;padding:0;background:#fff;border-radius:8px;list-style:none;box-shadow:0 2px 6px rgba(0,0,0,.1)}
-#list li{display:flex;justify-content:space-between;padding:.75rem 1rem;border-bottom:1px solid #e5e5e5}
-#list li:last-child{border:none}
-.back{display:block;margin:1rem auto 0;width:max-content;text-decoration:none;color:#007aff}
-</style>
-</head>
-<body>
-<h1>Top Players</h1>
-<ul id="list"><li>Loading…</li></ul>
-<a href="index.html" class="back">← Back</a>
-<script>
-async function load(){const r=await fetch('/api/leaderboard');const data=await r.json();
- const ul=document.getElementById('list');ul.innerHTML='';data.forEach((u,i)=>{const li=document.createElement('li');li.innerHTML=`<span>#${i+1} ${u.name}</span><strong>${u.score}</strong>`;ul.appendChild(li);});}
-load();
-</script>
-</body>
-</html>
+<style>body{background:#f2f2f2;color:#000}h1{text-align:center;margin:1rem 0}#list{max-width:400px;margin:0 auto;padding:0;background:#fff;border-radius:8px;list-style:none;box-shadow:0 2px 6px rgba(0,0,0,.1)}#list li{display:flex;justify-content:space-between;padding:.75rem 1rem;border-bottom:1px solid #e5e5e5}#list li:last-child{border:none}.back{display:block;margin:1rem auto 0;text-decoration:none;color:#007aff}</style>
+</head><body><h1>Top Players</h1><ul id="list"><li>Loading…</li></ul><a href="index.html" class="back">← Back</a>
+<script>async function load(){const r=await fetch('/api/leaderboard');const d=await r.json();const ul=document.getElementById('list');ul.innerHTML='';d.forEach((u,i)=>{const li=document.createElement('li');li.innerHTML=`<span>#${i+1} ${u.name}</span><strong>${u.score}</strong>`;ul.appendChild(li);});}load();</script>
+</body></html>
